@@ -13,7 +13,7 @@ for(let r = 0; r < 50; r++) {
 
 var notes = [];
 for(let c = 0; c < 16; c++) {
-  notes.push([-1,-1,0,-1]); // x, y, z, n
+  notes.push([0,0,0,-1]); // x, y, z, n
 }
 
 var midiInput;
@@ -141,24 +141,22 @@ function handleNoteOn(e) {
 }
 
 function handleAftertouch(e) {
-  if(notes[e.channel-1][0] < 0) return;
+  if(notes[e.channel-1][3] < 0) return;
   notes[e.channel-1][2] = 100*e.value;
 }
 
 function handlePitchbend(e) {
-  if(notes[e.channel-1][0] < 0) return;
+  if(notes[e.channel-1][3] < 0) return;
   notes[e.channel-1][0] = ((notes[e.channel-1][3]-60)%5+0.5)*32/5+32*(e.value)/0.083251953125;
 }
 
 function handleControl(e) {
-  if(notes[e.channel-1][0] < 0) return;
+  if(notes[e.channel-1][3] < 0) return;
   notes[e.channel-1][1] = (floor((notes[e.channel-1][3]-60)/5)+0.5)*32/5+32*(e.value-63)/127;
 }
 
 function handleNoteOff(e) {
-  notes[e.channel-1][0] = -1;
-  notes[e.channel-1][1] = -1;
-  notes[e.channel-1][2] = 0;
+  notes[e.channel-1] = [0,0,0,-1];
 }
 
 function disableMidi() {
